@@ -16,14 +16,22 @@ def index(request):
     num_authors = Author.objects.count()  # Метод 'all()' применён по умолчанию.
     num_genre = Genre.objects.count()
 
+    # Number of visits to this view, as counted in the session variable.
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
+
     # Отрисовка HTML-шаблона index.html с данными внутри
     # переменной контекста context
-    return render(
-        request,
-        'index.html',
-        context={'num_books': num_books, 'num_instances': num_instances,
-                 'num_instances_available': num_instances_available, 'num_authors': num_authors, 'num_genre': num_genre}
-    )
+    context = {
+        'num_books': num_books,
+        'num_instances': num_instances,
+        'num_instances_available': num_instances_available,
+        'num_authors': num_authors,
+        'num_visits': num_visits,
+    }
+
+    # Render the HTML template index.html with the data in the context variable.
+    return render(request, 'index.html', context=context)
 
 
 class BookListView(generic.ListView):
