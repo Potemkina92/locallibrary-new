@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Author: {{ author.first_name }} {{ author.last_name }}</h1>
+
+  <p><strong>First_name:</strong> <a href="">{{ author.first_name }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Last_name:</strong> {{ author.last_name }}</p>
+  <p><strong>Date_of_birth:</strong> {{ author.date_of_birth }}</p>
+  <p><strong>date_of_death:</strong> {{ author.date_of_death }}</p>
+
+
+  <div style="margin-left:40px;margin-top:40px">
+    <h2>Books</h2>
+
+    <dl>
+{% for book in author.book_set.all %}
+  <dt><a href="{% url 'book-detail' book.pk %}"> <h3>{{book}}</h3> </a>({{book.bookinstance_set.all.count}})</dt>
+      <dd><strong>ISBN:</strong> {{book.isbn}}</dd>
+
+  <dd><strong>Book summary:</strong>  {{book.summary}}</dd>
+
+   <dd> <strong>Genre:</strong>  {% for genre in book.genre.all %} {{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</dd>
+
+{% endfor %}
+</dl>
+  </div>
+{% endblock %}
+>
