@@ -3,6 +3,14 @@ from django.views import generic
 
 from .models import Book, Author, BookInstance, Genre
 
+from django.http import HttpResponse, JsonResponse
+from datetime import datetime
+
+
+def time_now(request):
+    current_time = datetime.now().time()
+    return JsonResponse({'time': current_time})
+
 
 def index(request):
     """
