@@ -9,7 +9,11 @@ from datetime import datetime
 
 def time_now(request):
     current_time = datetime.now().time()
-    return JsonResponse({'time': current_time})
+    if request.GET:
+        if request.GET['target'] == 'time':
+            return JsonResponse({'time': current_time})
+    else:
+        raise Exception('invalid value')
 
 
 def index(request):
