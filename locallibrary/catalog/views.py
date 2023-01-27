@@ -3,6 +3,18 @@ from django.views import generic
 
 from .models import Book, Author, BookInstance, Genre
 
+from django.http import HttpResponse, JsonResponse
+from datetime import datetime
+
+
+def time_now(request):
+    current_time = datetime.now().time()
+    if request.GET:
+        if request.GET['target'] == 'time':
+            return JsonResponse({'time': current_time})
+    else:
+        raise Exception('invalid value')
+
 
 def index(request):
     """
