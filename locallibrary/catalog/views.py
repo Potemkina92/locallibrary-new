@@ -1,19 +1,28 @@
+from django.db.models.fields import json
 from django.shortcuts import render
 from django.views import generic
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Book, Author, BookInstance, Genre
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from datetime import datetime
+from rest_framework import exceptions
 
 
+@csrf_exempt
 def time_now(request):
+    print(request.__dict__)
     current_time = datetime.now().time()
-    if request.GET:
+    if request.method == 'POST':
+        return JsonResponse({'time': current_time})
+
+    elif request.method == 'GET':
         if request.GET['target'] == 'time':
             return JsonResponse({'time': current_time})
+
     else:
-        raise Exception('invalid value')
+        return JsonResponse({'detail': 'invalid parameter'}, status=400)
 
 
 def index(request):
