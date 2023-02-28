@@ -26,7 +26,7 @@ from .models import BookInstance
 #         # Remember to always return the cleaned data.
 #         return data
 
-class RenewBookModelForm(ModelForm):
+class RenewBookForm(ModelForm):
     def clean_due_back(self):
         data = self.cleaned_data['due_back']
 

@@ -4,11 +4,11 @@ from django.views import generic
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, UpdateView, DeleteView
 
-from .forms import RenewBookModelForm
+from .forms import RenewBookForm
 from .models import Book, Author, BookInstance, Genre
 
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest, HttpRequest, HttpResponseRedirect
-from datetime import datetime, timedelta
+import datetime
 from rest_framework import exceptions
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -72,14 +72,17 @@ class BookListView(generic.ListView):
 
 class BookDetailView(generic.DetailView):
     model = Book
+    paginate_by = 10
 
 
 class AuthorListView(generic.ListView):
     model = Author
+    paginate_by = 10
 
 
 class AuthorDetailView(generic.DetailView):
     model = Author
+    paginate_by = 10
 
 
 class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
@@ -114,7 +117,7 @@ def renew_book_librarian(request, pk):
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
-        form = RenewBookModelForm(request.POST)
+        form = RenewBookForm(request.POST)
 
         # Check if the form is valid:
         if form.is_valid():
@@ -127,8 +130,8 @@ def renew_book_librarian(request, pk):
 
     # If this is a GET (or any other method) create the default form
     else:
-        proposed_renewal_date = datetime.today() + timedelta(weeks=3)
-        form = RenewBookModelForm(initial={'due_back': proposed_renewal_date})
+        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        form = RenewBookForm(initial={'due_back': proposed_renewal_date})
 
     context = {
         'form': form,
